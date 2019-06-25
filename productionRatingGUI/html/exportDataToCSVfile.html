@@ -1,0 +1,1432 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   
+      <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      -->
+      <title>exportDataToCSVfile</title>
+      <meta name="generator" content="MATLAB 7.8">
+      <meta name="date" content="2010-04-15">
+      <meta name="m-file" content="exportDataToCSVfile"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head>
+   <body>
+      <div class="content"><pre class="codeinput"><span class="comment">%WK 2010</span>
+<span class="comment">% used for producing csv files for download in capnobase website</span>
+<span class="comment">% mat2csv converter</span>
+
+<span class="comment">%importfile('../signalstemp.csv')</span>
+clear <span class="string">all</span>
+
+
+counter=1;
+<span class="comment">% foldercontent=dir('data');</span>
+<span class="comment">% raterID='333';</span>
+<span class="comment">% counter=1;</span>
+<span class="comment">% foldercontent=dir(['ratings/' raterID ]);</span>
+
+study=<span class="string">'SimulationMarkAnsermino08_04/'</span>;<span class="comment">%'default/';</span>
+folder=[<span class="string">'data/'</span> study  ];
+foldercontent=dir(folder);
+
+<span class="keyword">for</span> i=3:length(foldercontent)
+
+    <span class="keyword">if</span>(~foldercontent(i).isdir)
+        [pathstr, name, ext, versn]= fileparts(foldercontent(i).name);
+        <span class="keyword">if</span> strcmp(ext,<span class="string">'.mat'</span>)
+            handles.data.name{counter}=name;<span class="comment">%foldercontent(i).</span>
+            counter=counter+1;
+        <span class="keyword">end</span>
+    <span class="keyword">else</span> <span class="comment">%update 10/4/2010</span>
+        subfoldercontent=dir([folder <span class="string">'/'</span> foldercontent(i).name]); <span class="comment">%browse subfolder</span>
+        <span class="keyword">for</span> k=3:length(subfoldercontent)
+            <span class="keyword">if</span>(~subfoldercontent(k).isdir)
+                [pathstr, name, ext, versn]= fileparts(subfoldercontent(k).name);
+
+                <span class="keyword">if</span> strcmp(ext,<span class="string">'.mat'</span>)
+                    mkdir([<span class="string">'csv/'</span> study <span class="string">'/'</span> foldercontent(i).name ])
+                    handles.data.name{counter}=[foldercontent(i).name <span class="string">'/'</span> name];<span class="comment">%foldercontent(i).</span>
+                    counter=counter+1;
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+        <span class="keyword">end</span>
+
+
+    <span class="keyword">end</span>
+
+<span class="keyword">end</span>
+<span class="comment">%loads new data</span>
+signalcounter=0;
+<span class="keyword">for</span> k=1:length( handles.data.name)<span class="comment">%179%</span>
+    type=handles.data.name{k}(end-3:end);
+    <span class="keyword">switch</span> type
+        <span class="keyword">case</span> <span class="string">'meta'</span>
+            clear <span class="string">header</span> <span class="string">value</span>
+            signalcounter=signalcounter+1;
+            current=load([folder (handles.data.name{k})],<span class="string">'meta'</span>); <span class="comment">%,'data','param'</span>
+
+            counter=1;
+
+            task={<span class="string">'meta'</span>}; <span class="comment">%,'param'};</span>
+            <span class="comment">%  C1={};</span>
+            <span class="keyword">for</span> i=1:length(task)
+
+                fieldNames=fieldnames(current.(task{i}));
+                <span class="keyword">for</span> m=1:length(fieldNames)
+
+
+                    <span class="keyword">if</span> isstruct(current.(task{i}).(fieldNames{m}))
+                        fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
+                        <span class="keyword">for</span> n=1:length(fieldNames2)
+                            <span class="keyword">if</span>  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}))
+                                fieldNames3=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                                <span class="comment">%TODO</span>
+                                <span class="keyword">for</span> l=1:length(fieldNames3)
+                                    <span class="keyword">if</span>  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}))
+                                        fieldNames4=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}));
+                                    <span class="keyword">else</span>
+                                        header{counter}=[fieldNames{m} <span class="string">'_'</span> fieldNames2{n} <span class="string">'_'</span> fieldNames3{l}];
+                                        value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l});
+                                        counter=counter+1;
+                                    <span class="keyword">end</span>
+                                <span class="keyword">end</span>
+                            <span class="keyword">else</span>
+                                header{counter}=[fieldNames{m} <span class="string">'_'</span> fieldNames2{n}];
+                                value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n});
+                                counter=counter+1;
+                            <span class="keyword">end</span>
+                            <span class="keyword">if</span> (iscell(value{counter-1}))
+                                value{counter-1}=<span class="string">''</span>; <span class="comment">%clear dummmy cell</span>
+                            <span class="keyword">end</span>
+                        <span class="keyword">end</span>
+                    <span class="keyword">else</span>
+                        header{counter}=fieldNames{m};
+                        value{counter}=current.(task{i}).(fieldNames{m});
+                        counter=counter+1;
+                    <span class="keyword">end</span>
+                    <span class="keyword">if</span> (iscell(value{counter-1}))
+                        value{counter-1}=<span class="string">''</span>; <span class="comment">%clear dummmy cell</span>
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            clear <span class="string">C1</span>
+            C1(1,:)=header;
+            C1(2,:)=value;
+
+
+            C2=[ C1];
+            cell2csv([<span class="string">'csv/'</span> study handles.data.name{k} <span class="string">'.csv'</span>],C2,<span class="string">','</span>);
+
+
+        <span class="keyword">case</span> <span class="string">'tput'</span>
+            clear <span class="string">header</span> <span class="string">value</span>
+            signalcounter=signalcounter+1;
+            current=load([folder (handles.data.name{k})],<span class="string">'output'</span>); <span class="comment">%,'data','param'</span>
+
+            counter=1;
+
+            task={<span class="string">'output'</span>}; <span class="comment">%,'param'};</span>
+            <span class="comment">%  C1={};</span>
+            <span class="keyword">for</span> i=1:length(task)
+
+                fieldNames=fieldnames(current.(task{i}));
+                <span class="keyword">for</span> m=1:length(fieldNames)
+
+
+                    <span class="keyword">if</span> isstruct(current.(task{i}).(fieldNames{m}))
+                        fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
+                        <span class="keyword">for</span> n=1:length(fieldNames2)
+                            <span class="comment">%                             if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}))</span>
+                            <span class="comment">%                                 fieldNames3=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));</span>
+                            <span class="comment">%                                 %TODO</span>
+                            <span class="comment">%                                 for l=1:length(fieldNames3)</span>
+                            <span class="comment">%                                     if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}))</span>
+                            <span class="comment">%                                         fieldNames4=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}));</span>
+                            <span class="comment">%                                     else</span>
+                            <span class="comment">%                                         header{counter}=[fieldNames{m} '_' fieldNames2{n} '_' fieldNames3{l}];</span>
+                            <span class="comment">%                                         value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l});</span>
+                            <span class="comment">%                                         counter=counter+1;</span>
+                            <span class="comment">%                                     end</span>
+                            <span class="comment">%                                 end</span>
+                            <span class="comment">%                             else</span>
+                            header{counter}=[fieldNames{m} <span class="string">'_'</span> fieldNames2{n}];
+                            <span class="keyword">try</span>
+                                value(:,counter)=num2cell(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                            <span class="keyword">catch</span>
+                                value{1,counter}=<span class="string">''</span>;
+                            <span class="keyword">end</span>
+                            counter=counter+1;
+                            <span class="comment">%end</span>
+                            <span class="comment">%                             if (iscell(value{counter-1}))</span>
+                            <span class="comment">%                                 value{counter-1}=''; %clear dummmy cell</span>
+                            <span class="comment">%                             end</span>
+                        <span class="keyword">end</span>
+                    <span class="keyword">else</span>
+                        header{counter}=fieldNames{m};
+                        value{1,counter}=current.(task{i}).(fieldNames{m});
+                        counter=counter+1;
+                    <span class="keyword">end</span>
+                    <span class="comment">%                     if (iscell(value{counter-1}))</span>
+                    <span class="comment">%                         value{counter-1}=''; %clear dummmy cell</span>
+                    <span class="comment">%                     end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            clear <span class="string">C1</span>
+            C1(1,:)=header;
+
+            C1=[C1; value];
+
+
+            C2=[ C1];
+            cell2csv([<span class="string">'csv/'</span> study handles.data.name{k} <span class="string">'.csv'</span>],C2,<span class="string">','</span>);
+
+
+        <span class="keyword">case</span> <span class="string">'gnal'</span>
+            clear <span class="string">header</span> <span class="string">value</span>
+            signalcounter=signalcounter+1;
+            current=load([folder (handles.data.name{k})],<span class="string">'data'</span>); <span class="comment">%,'data','param'</span>
+
+            counter=1;
+
+            task={<span class="string">'data'</span>}; <span class="comment">%,'param'};</span>
+            <span class="comment">%  C1={};</span>
+            <span class="keyword">for</span> i=1:length(task)
+
+                fieldNames=fieldnames(current.(task{i}));
+                <span class="keyword">for</span> m=1:length(fieldNames)
+
+
+                    <span class="keyword">if</span> isstruct(current.(task{i}).(fieldNames{m}))
+                        fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
+                        <span class="keyword">for</span> n=1:length(fieldNames2)
+                            <span class="comment">%                             if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}))</span>
+                            <span class="comment">%                                 fieldNames3=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));</span>
+                            <span class="comment">%                                 %TODO</span>
+                            <span class="comment">%                                 for l=1:length(fieldNames3)</span>
+                            <span class="comment">%                                     if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}))</span>
+                            <span class="comment">%                                         fieldNames4=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}));</span>
+                            <span class="comment">%                                     else</span>
+                            <span class="comment">%                                         header{counter}=[fieldNames{m} '_' fieldNames2{n} '_' fieldNames3{l}];</span>
+                            <span class="comment">%                                         value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l});</span>
+                            <span class="comment">%                                         counter=counter+1;</span>
+                            <span class="comment">%                                     end</span>
+                            <span class="comment">%                                 end</span>
+                            <span class="comment">%                             else</span>
+                            header{counter}=[fieldNames{m} <span class="string">'_'</span> fieldNames2{n}];
+                            <span class="keyword">try</span>
+                                value(:,counter)=num2cell(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                            <span class="keyword">catch</span>
+                                value{1,counter}=<span class="string">''</span>;
+                            <span class="keyword">end</span>
+                            counter=counter+1;
+                            <span class="comment">%                            end</span>
+                            <span class="comment">%                             if (iscell(value{counter-1}))</span>
+                            <span class="comment">%                                 value{counter-1}=''; %clear dummmy cell</span>
+                            <span class="comment">%                             end</span>
+                        <span class="keyword">end</span>
+                    <span class="keyword">else</span>
+                        header{counter}=fieldNames{m};
+                        value{1,counter}=current.(task{i}).(fieldNames{m});
+                        counter=counter+1;
+                    <span class="keyword">end</span>
+                    <span class="comment">%                     if (iscell(value{counter-1}))</span>
+                    <span class="comment">%                         value{counter-1}=''; %clear dummmy cell</span>
+                    <span class="comment">%                     end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            clear <span class="string">C1</span>
+            C1(1,:)=header;
+            C1=[C1; value];
+
+
+            C2=[ C1];
+            cell2csv([<span class="string">'csv/'</span> study handles.data.name{k} <span class="string">'.csv'</span>],C2,<span class="string">','</span>);
+
+
+        <span class="keyword">case</span> <span class="string">'ting'</span>
+            clear <span class="string">header</span> <span class="string">value</span>
+            signalcounter=signalcounter+1;
+            current=load([folder (handles.data.name{k})],<span class="string">'rating'</span>); <span class="comment">%,'data','param'</span>
+
+            counter=1;
+
+            task={<span class="string">'rating'</span>}; <span class="comment">%,'param'};</span>
+            <span class="comment">%  C1={};</span>
+            <span class="keyword">for</span> i=1:length(task)
+
+                fieldNames=fieldnames(current.(task{i}));
+                <span class="keyword">for</span> m=1:length(fieldNames)
+
+
+                    <span class="keyword">if</span> isstruct(current.(task{i}).(fieldNames{m}))
+                        fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
+                        <span class="keyword">for</span> n=1:length(fieldNames2)
+                            <span class="keyword">if</span>  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}))
+                                fieldNames3=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                                <span class="comment">%TODO</span>
+                                <span class="keyword">for</span> l=1:length(fieldNames3)
+                                    <span class="keyword">if</span>  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}))
+                                        fieldNames4=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}));
+                                    <span class="keyword">else</span>
+                                        header{counter}=[fieldNames{m} <span class="string">'_'</span> fieldNames2{n} <span class="string">'_'</span> fieldNames3{l}];
+                                        value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l});
+                                        counter=counter+1;
+                                    <span class="keyword">end</span>
+                                <span class="keyword">end</span>
+                            <span class="keyword">else</span>
+                                header{counter}=[fieldNames{m} <span class="string">'_'</span> fieldNames2{n}];
+                                value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n});
+                                counter=counter+1;
+                            <span class="keyword">end</span>
+                            <span class="keyword">if</span> (iscell(value{counter-1}))
+                                value{counter-1}=<span class="string">''</span>; <span class="comment">%clear dummmy cell</span>
+                            <span class="keyword">end</span>
+                        <span class="keyword">end</span>
+                    <span class="keyword">else</span>
+                        header{counter}=fieldNames{m};
+                        value{counter}=current.(task{i}).(fieldNames{m});
+                        counter=counter+1;
+                    <span class="keyword">end</span>
+                    <span class="keyword">if</span> (iscell(value{counter-1}))
+                        value{counter-1}=<span class="string">''</span>; <span class="comment">%clear dummmy cell</span>
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            clear <span class="string">C1</span>
+            C1(1,:)=header;
+            C1(2,:)=value;
+
+
+            C2=[ C1];
+            cell2csv([<span class="string">'csv/'</span> study handles.data.name{k} <span class="string">'.csv'</span>],C2,<span class="string">','</span>);
+
+        <span class="keyword">case</span> <span class="string">'aram'</span>
+            clear <span class="string">header</span> <span class="string">value</span>
+            signalcounter=signalcounter+1;
+            current=load([folder (handles.data.name{k})],<span class="string">'param'</span>); <span class="comment">%,'data','param'</span>
+
+            counter=1;
+
+            task={<span class="string">'param'</span>}; <span class="comment">%,'param'};</span>
+            <span class="comment">%  C1={};</span>
+            <span class="keyword">for</span> i=1:length(task)
+
+                fieldNames=fieldnames(current.(task{i}));
+                <span class="keyword">for</span> m=1:length(fieldNames)
+
+
+                    <span class="keyword">if</span> isstruct(current.(task{i}).(fieldNames{m}))
+                        fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
+                        <span class="keyword">for</span> n=1:length(fieldNames2)
+                            <span class="keyword">if</span>  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}))
+                                fieldNames3=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                                <span class="comment">%TODO</span>
+                                <span class="keyword">for</span> l=1:length(fieldNames3)
+                                    <span class="keyword">if</span>  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}))
+                                        fieldNames4=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}));
+                                    <span class="keyword">else</span>
+                                        header{counter}=[fieldNames{m} <span class="string">'_'</span> fieldNames2{n} <span class="string">'_'</span> fieldNames3{l}];
+                                        value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l});
+                                        counter=counter+1;
+                                    <span class="keyword">end</span>
+                                <span class="keyword">end</span>
+                            <span class="keyword">else</span>
+                                header{counter}=[fieldNames{m} <span class="string">'_'</span> fieldNames2{n}];
+                                value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n});
+                                counter=counter+1;
+                            <span class="keyword">end</span>
+                            <span class="keyword">if</span> (iscell(value{counter-1}))
+                                value{counter-1}=<span class="string">''</span>; <span class="comment">%clear dummmy cell</span>
+                            <span class="keyword">end</span>
+                        <span class="keyword">end</span>
+                    <span class="keyword">else</span>
+                        header{counter}=fieldNames{m};
+                        value{counter}=current.(task{i}).(fieldNames{m});
+                        counter=counter+1;
+                    <span class="keyword">end</span>
+                    <span class="keyword">if</span> (iscell(value{counter-1}))
+                        value{counter-1}=<span class="string">''</span>; <span class="comment">%clear dummmy cell</span>
+                    <span class="keyword">end</span>
+                <span class="keyword">end</span>
+            <span class="keyword">end</span>
+            clear <span class="string">C1</span>
+            C1(1,:)=header;
+            C1(2,:)=value;
+
+
+            C2=[ C1];
+            cell2csv([<span class="string">'csv/'</span> study handles.data.name{k} <span class="string">'.csv'</span>],C2,<span class="string">','</span>);
+
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="comment">%cell2csv(['metacsv/allSimMeta.csv'],C2,'#');</span>
+</pre><pre class="codeoutput">Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+Warning: Directory already exists. 
+
+var =
+
+                                                     Reduced flow
+Small increase in CO2 but has poor shape of CG and underestimated
+
+
+var =
+
+Reduced flow; Small increase in CO2 but has poor shape of CG and underestimated ;
+
+
+var =
+
+Increased CO2 due to better flow - even with slower rate
+                                    Improved shape of CG
+
+
+var =
+
+Increased CO2 due to better flow - even with slower rate;                                     Improved shape of CG ;
+
+
+var =
+
+    Increased insp and exp flow
+                Longer exp time
+Improved CG with increased flow
+
+
+var =
+
+Increased insp and exp flow;                  Longer exp time ; Improved CG with increased flow  ;
+
+
+var =
+
+Improved flowbut increase in CO2
+            Improved shape of CG
+
+
+var =
+
+Improved flowbut increase in CO2;             Improved shape of CG ;
+
+
+var =
+
+ Flow unchanged
+Shape unchanged
+
+
+var =
+
+Flow unchanged; Shape unchanged ;
+
+
+var =
+
+     Increase in flow
+Imporoved shape of CG
+
+
+var =
+
+Increase in flow; Imporoved shape of CG ;
+
+
+var =
+
+Massive increase in CO2
+         Flow unchanged
+        ? Increased CO2
+           Loss of Plat
+
+
+var =
+
+Massive increase in CO2;            Flow unchanged ;          ? Increased CO2  ;            Loss of Plat   ;
+
+
+var =
+
+                Massive increase in CO2
+                         Flow unchanged
+Decrease in shape of CG - steep upslope
+
+
+var =
+
+Massive increase in CO2;                           Flow unchanged ; Decrease in shape of CG - steep upslope  ;
+
+
+var =
+
+Reduced peak insp flow
+    Increased exp flow
+        Change in I:E?
+
+
+var =
+
+Reduced peak insp flow;      Increased exp flow ;         Change in I:E?  ;
+
+
+var =
+
+Flow slight decrease?
+           Good Shape
+
+
+var =
+
+Flow slight decrease?;            Good Shape ;
+
+
+var =
+
+                          Poor shape of CG
+                                   No plat
+                                 High rate
+Increase in CO2 even with increase in flow
+
+
+var =
+
+Poor shape of CG;                                      No plat ;                                   High rate  ; Increase in CO2 even with increase in flow   ;
+
+
+var =
+
+Increase in CO2 with increase in flow
+                  3. Poor shape of CG
+                    4. Improved shape
+
+
+var =
+
+Increase in CO2 with increase in flow;                    3. Poor shape of CG ;                     4. Improved shape  ;
+
+
+var =
+
+                Normal
+Slight increase in CO2
+
+
+var =
+
+Normal; Slight increase in CO2 ;
+
+
+var =
+
+                 Poor shape of CG
+                         Rapid RR
+Low unchanged but increase in CO2
+
+
+var =
+
+Poor shape of CG;                           Rapid RR ; Low unchanged but increase in CO2  ;
+
+
+var =
+
+Decreased insp flow
+        Increase RR
+
+
+var =
+
+Decreased insp flow;         Increase RR ;
+
+
+var =
+
+    Improved flow
+Improved CG shAPE
+       Reduced RR
+
+
+var =
+
+Improved flow;  Improved CG shAPE ;        Reduced RR  ;
+
+
+var =
+
+Reduction in insp flow
+         Increase rate
+
+
+var =
+
+Reduction in insp flow;          Increase rate ;
+
+
+var =
+
+Slight decrease in flow
+  width reduction in CG
+
+
+var =
+
+Slight decrease in flow;   width reduction in CG ;
+
+
+var =
+
+No bovious change in flow
+  Possilbe decrease in CO
+
+
+var =
+
+No bovious change in flow;   Possilbe decrease in CO ;
+
+
+var =
+
+            Slight change
+No obvious change in flow
+
+
+var =
+
+Slight change; No obvious change in flow ;
+
+
+var =
+
+                                  Slight increase
+Min change in ventilation slight increase in flow
+
+
+var =
+
+Slight increase; Min change in ventilation slight increase in flow ;
+
+
+var =
+
+       Reduced pleak flow
+Min change in shape of CG
+
+
+var =
+
+Reduced pleak flow; Min change in shape of CG ;
+
+
+var =
+
+      Slight increase
+Ventilation unchanged
+
+
+var =
+
+Slight increase; Ventilation unchanged ;
+
+
+var =
+
+Change in exp flow
+    Longer plateau
+
+
+var =
+
+Change in exp flow;     Longer plateau ;
+
+
+var =
+
+      Slight increase
+Ventilation unchanged
+
+
+var =
+
+Slight increase; Ventilation unchanged ;
+
+
+var =
+
+     very slight decrease
+no obvious change in vent
+
+
+var =
+
+very slight decrease; no obvious change in vent ;
+
+
+var =
+
+Decreased peak flow
+    Plateau shorter
+
+
+var =
+
+Decreased peak flow;     Plateau shorter ;
+
+
+var =
+
+Small increase
+  Good pattern
+
+
+var =
+
+Small increase;   Good pattern ;
+
+
+var =
+
+    Small increase
+Change in exp flow
+
+
+var =
+
+Small increase; Change in exp flow ;
+
+
+var =
+
+       Small decrease
+? obstructive pattern
+
+
+var =
+
+Small decrease; ? obstructive pattern ;
+
+
+var =
+
+High resp rate
+       No plat
+      ? Mixing
+
+
+var =
+
+High resp rate;         No plat ;       ? Mixing  ;
+
+
+var =
+
+Possible decrease in CO2 production  but flow does decrease
+                                                           
+                               Shape of curve is improved??
+
+
+var =
+
+Possible decrease in CO2 production  but flow does decrease;                                                              ;                                Shape of curve is improved??  ;
+
+
+var =
+
+Modest increase
+ Decreased flow
+
+
+var =
+
+Modest increase;  Decreased flow ;
+
+
+var =
+
+Change in flow pattern
+     Increase after2 2
+
+
+var =
+
+Change in flow pattern;      Increase after2 2 ;
+
+</pre><p class="footer"><br>
+            Published with MATLAB&reg; 7.8<br></p>
+      </div>
+      <!--
+##### SOURCE BEGIN #####
+%WK 2010
+% used for producing csv files for download in capnobase website
+% mat2csv converter
+
+%importfile('../signalstemp.csv')
+clear all
+
+
+counter=1;
+% foldercontent=dir('data');
+% raterID='333';
+% counter=1;
+% foldercontent=dir(['ratings/' raterID ]);
+
+study='SimulationMarkAnsermino08_04/';%'default/';
+folder=['data/' study  ];
+foldercontent=dir(folder);
+
+for i=3:length(foldercontent)
+    
+    if(~foldercontent(i).isdir)
+        [pathstr, name, ext, versn]= fileparts(foldercontent(i).name);
+        if strcmp(ext,'.mat')
+            handles.data.name{counter}=name;%foldercontent(i).
+            counter=counter+1;
+        end
+    else %update 10/4/2010
+        subfoldercontent=dir([folder '/' foldercontent(i).name]); %browse subfolder
+        for k=3:length(subfoldercontent)
+            if(~subfoldercontent(k).isdir)
+                [pathstr, name, ext, versn]= fileparts(subfoldercontent(k).name);
+                
+                if strcmp(ext,'.mat')
+                    mkdir(['csv/' study '/' foldercontent(i).name ])
+                    handles.data.name{counter}=[foldercontent(i).name '/' name];%foldercontent(i).
+                    counter=counter+1;
+                end
+            end
+        end
+        
+        
+    end
+    
+end
+%loads new data
+signalcounter=0;
+for k=1:length( handles.data.name)%179%
+    type=handles.data.name{k}(end-3:end);
+    switch type
+        case 'meta'
+            clear header value
+            signalcounter=signalcounter+1;
+            current=load([folder (handles.data.name{k})],'meta'); %,'data','param'
+            
+            counter=1;
+            
+            task={'meta'}; %,'param'};
+            %  C1={};
+            for i=1:length(task)
+                
+                fieldNames=fieldnames(current.(task{i}));
+                for m=1:length(fieldNames)
+                    
+                    
+                    if isstruct(current.(task{i}).(fieldNames{m}))
+                        fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
+                        for n=1:length(fieldNames2)
+                            if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}))
+                                fieldNames3=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                                %TODO
+                                for l=1:length(fieldNames3)
+                                    if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}))
+                                        fieldNames4=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}));
+                                    else
+                                        header{counter}=[fieldNames{m} '_' fieldNames2{n} '_' fieldNames3{l}];
+                                        value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l});
+                                        counter=counter+1;
+                                    end
+                                end
+                            else
+                                header{counter}=[fieldNames{m} '_' fieldNames2{n}];
+                                value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n});
+                                counter=counter+1;
+                            end
+                            if (iscell(value{counter-1}))
+                                value{counter-1}=''; %clear dummmy cell
+                            end
+                        end
+                    else
+                        header{counter}=fieldNames{m};
+                        value{counter}=current.(task{i}).(fieldNames{m});
+                        counter=counter+1;
+                    end
+                    if (iscell(value{counter-1}))
+                        value{counter-1}=''; %clear dummmy cell
+                    end
+                end
+            end
+            clear C1
+            C1(1,:)=header;
+            C1(2,:)=value;
+            
+            
+            C2=[ C1];
+            cell2csv(['csv/' study handles.data.name{k} '.csv'],C2,',');
+            
+            
+        case 'tput'
+            clear header value
+            signalcounter=signalcounter+1;
+            current=load([folder (handles.data.name{k})],'output'); %,'data','param'
+            
+            counter=1;
+            
+            task={'output'}; %,'param'};
+            %  C1={};
+            for i=1:length(task)
+                
+                fieldNames=fieldnames(current.(task{i}));
+                for m=1:length(fieldNames)
+                    
+                    
+                    if isstruct(current.(task{i}).(fieldNames{m}))
+                        fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
+                        for n=1:length(fieldNames2)
+                            %                             if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}))
+                            %                                 fieldNames3=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                            %                                 %TODO
+                            %                                 for l=1:length(fieldNames3)
+                            %                                     if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}))
+                            %                                         fieldNames4=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}));
+                            %                                     else
+                            %                                         header{counter}=[fieldNames{m} '_' fieldNames2{n} '_' fieldNames3{l}];
+                            %                                         value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l});
+                            %                                         counter=counter+1;
+                            %                                     end
+                            %                                 end
+                            %                             else
+                            header{counter}=[fieldNames{m} '_' fieldNames2{n}];
+                            try
+                                value(:,counter)=num2cell(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                            catch
+                                value{1,counter}='';
+                            end
+                            counter=counter+1;
+                            %end
+                            %                             if (iscell(value{counter-1}))
+                            %                                 value{counter-1}=''; %clear dummmy cell
+                            %                             end
+                        end
+                    else
+                        header{counter}=fieldNames{m};
+                        value{1,counter}=current.(task{i}).(fieldNames{m});
+                        counter=counter+1;
+                    end
+                    %                     if (iscell(value{counter-1}))
+                    %                         value{counter-1}=''; %clear dummmy cell
+                    %                     end
+                end
+            end
+            clear C1
+            C1(1,:)=header;
+            
+            C1=[C1; value];
+            
+            
+            C2=[ C1];
+            cell2csv(['csv/' study handles.data.name{k} '.csv'],C2,',');
+            
+            
+        case 'gnal'
+            clear header value
+            signalcounter=signalcounter+1;
+            current=load([folder (handles.data.name{k})],'data'); %,'data','param'
+            
+            counter=1;
+            
+            task={'data'}; %,'param'};
+            %  C1={};
+            for i=1:length(task)
+                
+                fieldNames=fieldnames(current.(task{i}));
+                for m=1:length(fieldNames)
+                    
+                    
+                    if isstruct(current.(task{i}).(fieldNames{m}))
+                        fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
+                        for n=1:length(fieldNames2)
+                            %                             if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}))
+                            %                                 fieldNames3=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                            %                                 %TODO
+                            %                                 for l=1:length(fieldNames3)
+                            %                                     if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}))
+                            %                                         fieldNames4=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}));
+                            %                                     else
+                            %                                         header{counter}=[fieldNames{m} '_' fieldNames2{n} '_' fieldNames3{l}];
+                            %                                         value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l});
+                            %                                         counter=counter+1;
+                            %                                     end
+                            %                                 end
+                            %                             else
+                            header{counter}=[fieldNames{m} '_' fieldNames2{n}];
+                            try
+                                value(:,counter)=num2cell(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                            catch
+                                value{1,counter}='';
+                            end
+                            counter=counter+1;
+                            %                            end
+                            %                             if (iscell(value{counter-1}))
+                            %                                 value{counter-1}=''; %clear dummmy cell
+                            %                             end
+                        end
+                    else
+                        header{counter}=fieldNames{m};
+                        value{1,counter}=current.(task{i}).(fieldNames{m});
+                        counter=counter+1;
+                    end
+                    %                     if (iscell(value{counter-1}))
+                    %                         value{counter-1}=''; %clear dummmy cell
+                    %                     end
+                end
+            end
+            clear C1
+            C1(1,:)=header;
+            C1=[C1; value];
+            
+            
+            C2=[ C1];
+            cell2csv(['csv/' study handles.data.name{k} '.csv'],C2,',');
+            
+            
+        case 'ting'
+            clear header value
+            signalcounter=signalcounter+1;
+            current=load([folder (handles.data.name{k})],'rating'); %,'data','param'
+            
+            counter=1;
+            
+            task={'rating'}; %,'param'};
+            %  C1={};
+            for i=1:length(task)
+                
+                fieldNames=fieldnames(current.(task{i}));
+                for m=1:length(fieldNames)
+                    
+                    
+                    if isstruct(current.(task{i}).(fieldNames{m}))
+                        fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
+                        for n=1:length(fieldNames2)
+                            if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}))
+                                fieldNames3=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                                %TODO
+                                for l=1:length(fieldNames3)
+                                    if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}))
+                                        fieldNames4=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}));
+                                    else
+                                        header{counter}=[fieldNames{m} '_' fieldNames2{n} '_' fieldNames3{l}];
+                                        value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l});
+                                        counter=counter+1;
+                                    end
+                                end
+                            else
+                                header{counter}=[fieldNames{m} '_' fieldNames2{n}];
+                                value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n});
+                                counter=counter+1;
+                            end
+                            if (iscell(value{counter-1}))
+                                value{counter-1}=''; %clear dummmy cell
+                            end
+                        end
+                    else
+                        header{counter}=fieldNames{m};
+                        value{counter}=current.(task{i}).(fieldNames{m});
+                        counter=counter+1;
+                    end
+                    if (iscell(value{counter-1}))
+                        value{counter-1}=''; %clear dummmy cell
+                    end
+                end
+            end
+            clear C1
+            C1(1,:)=header;
+            C1(2,:)=value;
+            
+            
+            C2=[ C1];
+            cell2csv(['csv/' study handles.data.name{k} '.csv'],C2,',');
+            
+        case 'aram'
+            clear header value
+            signalcounter=signalcounter+1;
+            current=load([folder (handles.data.name{k})],'param'); %,'data','param'
+            
+            counter=1;
+            
+            task={'param'}; %,'param'};
+            %  C1={};
+            for i=1:length(task)
+                
+                fieldNames=fieldnames(current.(task{i}));
+                for m=1:length(fieldNames)
+                    
+                    
+                    if isstruct(current.(task{i}).(fieldNames{m}))
+                        fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
+                        for n=1:length(fieldNames2)
+                            if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}))
+                                fieldNames3=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                                %TODO
+                                for l=1:length(fieldNames3)
+                                    if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}))
+                                        fieldNames4=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}));
+                                    else
+                                        header{counter}=[fieldNames{m} '_' fieldNames2{n} '_' fieldNames3{l}];
+                                        value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l});
+                                        counter=counter+1;
+                                    end
+                                end
+                            else
+                                header{counter}=[fieldNames{m} '_' fieldNames2{n}];
+                                value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n});
+                                counter=counter+1;
+                            end
+                            if (iscell(value{counter-1}))
+                                value{counter-1}=''; %clear dummmy cell
+                            end
+                        end
+                    else
+                        header{counter}=fieldNames{m};
+                        value{counter}=current.(task{i}).(fieldNames{m});
+                        counter=counter+1;
+                    end
+                    if (iscell(value{counter-1}))
+                        value{counter-1}=''; %clear dummmy cell
+                    end
+                end
+            end
+            clear C1
+            C1(1,:)=header;
+            C1(2,:)=value;
+            
+            
+            C2=[ C1];
+            cell2csv(['csv/' study handles.data.name{k} '.csv'],C2,',');
+            
+    end
+end
+
+%cell2csv(['metacsv/allSimMeta.csv'],C2,'#');
+##### SOURCE END #####
+-->
+   </body>
+</html>

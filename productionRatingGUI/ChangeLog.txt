@@ -1,0 +1,61 @@
+%Capnobase Signal Evaluation Tool
+
+%CapnoBase (c)2009-2010 Electrical and Computer Engineering in Medicine, UBC
+%visit us at: http://ecem.ece.ubc.ca
+
+%The CapnoBase Signal Evaluation Tool has been written and is currently maintained by Dr. Walter Karlen
+%Repot bugs or leave comments on http://www.capnobase.org or send an email to walter.karlen@gmail.com
+
+
+%ChangeLog file
+
+%V1.4.
+13/5/10
+- minor edit. makes disappear controls during suggestion of cursors when operating with bid datasets.
+
+%V1.4
+07/4/10
+- added compatibility with capnobase subfolders. default import is now with subfolder.
+
+
+%V1.2
+01/3/10
+- added new task for visualization of gas/volume
+- renumbering of tasks
+
+%V1.1.1
+26/2/10
+- added logo to welcome screen
+
+
+%V1.1
+23/2/10
+- field 3 of trends was not loaded correctly
+- wrong field name for rr rating 'Inconsistent'
+
+
+%V1.0
+19/2/10
+!!!IMPORTANT!!! V1.0 is not compatible with previous versions. previous ratings have to be converted to be used with newer versions.
+- new data storage system
+- added selection of dataset
+- fixed bug: reading data folder (when folder was empty)
+- fixed bug: caption of quality cursors
+- fixed bug: no double rating savings 
+
+
+%V0.9
+
+11/2/10
+-Modified help popup
+-fixed bug with autoscale of window in module 1
+-fixed color of pressure button 
+-Pressure axes were not properly removed from handle
+-improved csv import
+-sampling rate could not be changed in meta
+
+2/2/10 
+-Start of this changeLog
+
+%V0.1 - 0.8
+- Early development 

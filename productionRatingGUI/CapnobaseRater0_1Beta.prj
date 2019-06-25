@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project><!--CapnobaseRater0_1Beta.prj-->
+   <MCCProperties>
+      <output>CapnobaseEvaluator1_4Beta</output>
+      <wrapper>
+         <type>WinMain</type>
+         <component_name>CapnobaseEvaluator1_4Beta</component_name>
+         <default_class>Main function</default_class>
+      </wrapper>
+      <intermediate_dir>C:\Documents and Settings\PostDoc\My Documents\MATLAB\CapnobaseAnnotationTool\src</intermediate_dir>
+      <output_dir>C:\Documents and Settings\PostDoc\My Documents\MATLAB\CapnobaseAnnotationTool\distrib</output_dir>
+      <link>exe</link>
+      <MCR_runtime_options/>
+      <generate_code_only>false</generate_code_only>
+      <verbose>true</verbose>
+      <create_CTF>false</create_CTF>
+      <options_file/>
+      <debug>false</debug>
+      <toolboxes_on_path shortcut="none"/>
+      <warning shortcut="default">
+         <warn name="specified_file_mismatch">enable</warn>
+         <warn name="repeated_file">enable</warn>
+         <warn name="switch_ignored">enable</warn>
+         <warn name="missing_lib_sentinel">enable</warn>
+         <warn name="demo_license">enable</warn>
+      </warning>
+   </MCCProperties>
+   <file_info>
+      <category name="Main function"><!--Do not modify the value of the name attribute, unless it is a class name.-->
+         <file>$(PROJECTDIR)/Start.m</file>
+      </category>
+      <category name="Other files"><!--Do not modify the value of the name attribute, unless it is a class name.-->
+         <file>$(PROJECTDIR)/metaGUI.m</file>
+         <file>$(PROJECTDIR)/popupHelp.m</file>
+         <file>$(PROJECTDIR)/rateShapeGUI.m</file>
+         <file>$(PROJECTDIR)/ratingGUI.m</file>
+         <file>$(PROJECTDIR)/setEtCO2GUI.m</file>
+         <file>$(PROJECTDIR)/setRRGUI.m</file>
+         <file>$(PROJECTDIR)/editID_CreateFcn.m</file>
+         <file>$(PROJECTDIR)/initZoomSlider.m</file>
+         <file>$(PROJECTDIR)/popupError.m</file>
+         <file>$(PROJECTDIR)/popupmenuJump_CreateFcn.m</file>
+         <file>$(PROJECTDIR)/popupmenuZoom_Callback.m</file>
+         <file>$(PROJECTDIR)/popupmenuZoom_CreateFcn.m</file>
+         <file>$(PROJECTDIR)/pushbuttonHelp_Callback.m</file>
+         <file>$(PROJECTDIR)/pushbuttonMenu_Callback.m</file>
+         <file>$(PROJECTDIR)/sliderZoom_Callback.m</file>
+         <file>$(PROJECTDIR)/sliderZoom_CreateFcn.m</file>
+         <file>$(PROJECTDIR)/FixCursor.m</file>
+         <file>$(PROJECTDIR)/popupmenuJumpTask_Callback.m</file>
+         <file>$(PROJECTDIR)/readDataDir.m</file>
+         <file>$(PROJECTDIR)/checkAxes.m</file>
+         <file>$(PROJECTDIR)/pushbuttonClose_Callback.m</file>
+         <file>$(PROJECTDIR)/popupmenuSelect_CreateFcn.m</file>
+         <file>$(PROJECTDIR)/popupmenuJumpTask_CreateFcn.m</file>
+         <file>$(PROJECTDIR)/ecem.jpg</file>
+         <file>$(PROJECTDIR)/displayVolumeGUI.m</file>
+      </category>
+      <category name="C/C++ files"><!--Do not modify the value of the name attribute, unless it is a class name.--></category>
+   </file_info>
+   <packaging>
+      <name>CapnobaseBeta_pkg</name>
+      <mcr include="true">
+         <location>default</location>
+      </mcr>
+      <additional_files/>
+   </packaging>
+   <MATLABPath>
+      <Directory>$(MATLABROOT)/toolbox/compiler/deploy</Directory>
+      <Directory>$(PROJECTDIR)/distrib</Directory>
+      <Directory>E:\MYDOCUMENTS\MATLAB</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/general</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/ops</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/lang</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/elmat</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/randfun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/elfun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/specfun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/matfun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/datafun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/polyfun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/funfun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/sparfun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/scribe</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/graph2d</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/graph3d</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/specgraph</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/graphics</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/uitools</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/strfun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/imagesci</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/iofun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/audiovideo</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/timefun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/datatypes</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/verctrl</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/codetools</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/helptools</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/winfun</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/winfun/NET</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/demos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/timeseries</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/hds</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/guide</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/plottools</Directory>
+      <Directory>$(MATLABROOT)/toolbox/local</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/controllib</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/dastudio</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlab/datamanager</Directory>
+      <Directory>$(MATLABROOT)/toolbox/matlabxl/matlabxl</Directory>
+      <Directory>$(MATLABROOT)/toolbox/compiler</Directory>
+      <Directory>$(MATLABROOT)/toolbox/curvefit/curvefit</Directory>
+      <Directory>$(MATLABROOT)/toolbox/curvefit/cftoolgui</Directory>
+      <Directory>$(MATLABROOT)/toolbox/curvefit/sftoolgui</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/optimlib</Directory>
+      <Directory>$(MATLABROOT)/toolbox/daq/daq</Directory>
+      <Directory>$(MATLABROOT)/toolbox/daq/daqguis</Directory>
+      <Directory>$(MATLABROOT)/toolbox/daq/daqdemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/daq/daqblks/daqblks</Directory>
+      <Directory>$(MATLABROOT)/toolbox/daq/daqblks/daqmasks</Directory>
+      <Directory>$(MATLABROOT)/toolbox/daq/daqblks/daqmex</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/testmeaslib</Directory>
+      <Directory>$(MATLABROOT)/toolbox/dotnetbuilder/dotnetbuilder</Directory>
+      <Directory>$(MATLABROOT)/toolbox/exlink</Directory>
+      <Directory>$(MATLABROOT)/toolbox/javabuilder/javabuilder</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nncontrol</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nndemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nnanalyze</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nncustom</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nndistance</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nnformat</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nninit</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nnlearn</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nnnetinput</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nnnetwork</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nnperformance</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nnplot</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nnprocess</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nnsearch</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nntopology</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nntrain</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nntransfer</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnet/nnweight</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnguis</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnguis/nftool</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnguis/nntool</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnobsolete</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnresource</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnutils</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnguis/nnguiutils</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nndemos/nndatasets</Directory>
+      <Directory>$(MATLABROOT)/toolbox/nnet/nnguis/nntraintool</Directory>
+      <Directory>$(MATLABROOT)/toolbox/optim/optim</Directory>
+      <Directory>$(MATLABROOT)/toolbox/optim/optimdemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/pde</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rptgen/rptgen</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rptgen/rptgendemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rptgen/rptgenv1</Directory>
+      <Directory>$(MATLABROOT)/toolbox/rptgen/xmlcomp</Directory>
+      <Directory>$(MATLABROOT)/toolbox/signal/signal</Directory>
+      <Directory>$(MATLABROOT)/toolbox/signal/sigtools</Directory>
+      <Directory>$(MATLABROOT)/toolbox/signal/sptoolgui</Directory>
+      <Directory>$(MATLABROOT)/toolbox/signal/sigdemos</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/spcuilib</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/siglib</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/filterdesignlib</Directory>
+      <Directory>$(MATLABROOT)/toolbox/stats</Directory>
+      <Directory>$(MATLABROOT)/toolbox/shared/statslib</Directory>
+      <Directory>$(MATLABROOT)/toolbox/wavelet/wavelet</Directory>
+      <Directory>$(MATLABROOT)/toolbox/wavelet/wmultisig1d</Directory>
+      <Directory>$(MATLABROOT)/toolbox/wavelet/wavedemo</Directory>
+      <Directory>$(MATLABROOT)/toolbox/wavelet/compression</Directory>
+   </MATLABPath>
+</project>
