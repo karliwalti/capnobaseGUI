@@ -1,0 +1,22 @@
+
+% folder where the datasets are located 
+conf.data.rootfolder= ['data' filesep];
+
+% 
+
+
+%% params for helper scripts
+% requires conf.data.rootfolderrootfolder to be set
+
+% source dataset
+conf.move.source='data';
+% target dataset
+conf.move.target='data';
+
+conf.export.csvfolder='metacsv';
+conf.export.filename='allmeta.csv';
+
+%dataset to create images in
+conf.image.rootfolder= ['signal_images' filesep];
+conf.image.source='data';
+conf.image.target=conf.image.source;
