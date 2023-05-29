@@ -12,9 +12,9 @@ counter=1;
 % counter=1;
 % foldercontent=dir(['ratings/' raterID ]);
 
-id=4;
-studyids={'CB8minLongData','CBBenchmarkAllSignals','CBSimulation','CBInVivoAllSignals'};
-study=studyids{id}%'CBBenchmarkAllSignals'%'CB8minLongData';%%'SpecialSelect/';'CapnoBaseInVivo/';%'CapnoBaseBenchmark/';%'iPlethLongData/';%'SimulationMarkAnsermino08_04/';%'default/';
+id=1;
+studyids={'CBTBMEBenchmark'}
+study=studyids{id};%'CBBenchmarkAllSignals'%'CB8minLongData';%%'SpecialSelect/';'CapnoBaseInVivo/';%'CapnoBaseBenchmark/';%'iPlethLongData/';%'SimulationMarkAnsermino08_04/';%'default/';
 folder=['C:\Users\wkarlen\Documents\Dropbox\Capnobase\dataverse\' study  filesep 'data' filesep];
 
 
@@ -51,9 +51,7 @@ end
 %loads new data
 signalcounter=0;
 for k=1:length( handles.data.name)%179%
-    type=handles.data.name{k}(end-3:end);
-    switch type
-        case 'meta'
+   
             clear header value
             signalcounter=signalcounter+1;
             current=load([matfolder (handles.data.name{k})],'meta'); %,'data','param'
@@ -108,17 +106,16 @@ for k=1:length( handles.data.name)%179%
             
             
             C2=[ C1];
-            cell2csv([folder filesep 'csv' filesep  handles.data.name{k} '.csv'],C2,',');
+            cell2csv([folder filesep 'csv' filesep  handles.data.name{k} '_' task{i} '.csv'],C2,',');
             
             
-        case 'tput'
-            clear header value
+         clear header value
             signalcounter=signalcounter+1;
-            current=load([matfolder (handles.data.name{k})],'output'); %,'data','param'
+            current=load([matfolder (handles.data.name{k})],'SFresults'); %,'data','param'
             
             counter=1;
             
-            task={'output'}; %,'param'};
+            task={'SFresults'}; %,'param'};
             %  C1={};
             for i=1:length(task)
                 
@@ -171,17 +168,76 @@ for k=1:length( handles.data.name)%179%
             
             
             C2=[ C1];
-            cell2csv([folder filesep 'csv' filesep  handles.data.name{k} '.csv'],C2,',');
+            cell2csv([folder filesep 'csv' filesep  handles.data.name{k} '_' task{i} '.csv'],C2,',');
             
-            
-        case 'gnal'
-            clear header value
+              clear header value
             signalcounter=signalcounter+1;
-            current=load([matfolder (handles.data.name{k})],'data'); %,'data','param'
+            current=load([matfolder (handles.data.name{k})],'reference'); %,'data','param'
             
             counter=1;
             
-            task={'data'}; %,'param'};
+            task={'reference'}; %,'param'};
+            %  C1={};
+            for i=1:length(task)
+                
+                fieldNames=fieldnames(current.(task{i}));
+                for m=1:length(fieldNames)
+                    
+                    
+                    if isstruct(current.(task{i}).(fieldNames{m}))
+                        fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
+                        for n=1:length(fieldNames2)
+                            if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}))
+                                fieldNames3=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                                %TODO
+                                for l=1:length(fieldNames3)
+                                    if  isstruct(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}))
+                                        fieldNames4=fieldnames(current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l}));
+                                    else
+                                        header{counter}=[fieldNames{m} '_' fieldNames2{n} '_' fieldNames3{l}];
+                                        value{counter}=current.(task{i}).(fieldNames{m}).(fieldNames2{n}).(fieldNames3{l});
+                                        counter=counter+1;
+                                    end
+                                end
+                            else
+                            header{counter}=[fieldNames{m} '_' fieldNames2{n}];
+                            try
+                                value(:,counter)=num2cell(current.(task{i}).(fieldNames{m}).(fieldNames2{n}));
+                            catch
+                                value{1,counter}='';
+                            end
+                            counter=counter+1;
+                            end
+                                                        if (iscell(value{counter-1}))
+                                                            value{counter-1}=''; %clear dummmy cell
+                                                        end
+                        end
+                    else
+                        header{counter}=fieldNames{m};
+                        value{1,counter}=current.(task{i}).(fieldNames{m});
+                        counter=counter+1;
+                    end
+                    %                     if (iscell(value{counter-1}))
+                    %                         value{counter-1}=''; %clear dummmy cell
+                    %                     end
+                end
+            end
+            clear C1
+            C1(1,:)=header;
+            
+            C1=[C1; value];
+            
+            
+            C2=[ C1];
+            cell2csv([folder filesep 'csv' filesep  handles.data.name{k} '_' task{i} '.csv'],C2,',');
+      
+            clear header value
+            signalcounter=signalcounter+1;
+            current=load([matfolder (handles.data.name{k})],'signal'); %,'data','param'
+            
+            counter=1;
+            
+            task={'signal'}; %,'param'};
             %  C1={};
             for i=1:length(task)
                 
@@ -235,17 +291,17 @@ for k=1:length( handles.data.name)%179%
             
             
             C2=[ C1];
-            cell2csv([folder filesep 'csv' filesep  handles.data.name{k} '.csv'],C2,',');
+            cell2csv([folder filesep 'csv' filesep  handles.data.name{k} '_' task{i} '.csv'],C2,',');
             
             
-        case 'ting'
+    
             clear header value
             signalcounter=signalcounter+1;
-            current=load([matfolder (handles.data.name{k})],'rating'); %,'data','param'
+            current=load([matfolder (handles.data.name{k})],'labels'); %,'data','param'
             
             counter=1;
             
-            task={'rating'}; %,'param'};
+            task={'labels'}; %,'param'};
             %  C1={};
             for i=1:length(task)
                 
@@ -293,9 +349,9 @@ for k=1:length( handles.data.name)%179%
             
             
             C2=[ C1];
-            cell2csv([folder filesep 'csv' filesep  handles.data.name{k} '.csv'],C2,',');
+            cell2csv([folder filesep 'csv' filesep  handles.data.name{k} '_' task{i} '.csv'],C2,',');
             
-        case 'aram'
+  
             clear header value
             signalcounter=signalcounter+1;
             current=load([matfolder (handles.data.name{k})],'param'); %,'data','param'
@@ -350,9 +406,9 @@ for k=1:length( handles.data.name)%179%
             
             
             C2=[ C1];
-            cell2csv([folder filesep 'csv' filesep handles.data.name{k} '.csv'],C2,',');
+            cell2csv([folder filesep 'csv' filesep handles.data.name{k} '_' task{i} '.csv'],C2,',');
             
     end
-end
+
 
 %cell2csv(['metacsv/allSimMeta.csv'],C2,'#');
