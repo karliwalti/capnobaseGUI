@@ -9,7 +9,7 @@ counter=1;
 % foldercontent=dir(['ratings/' raterID ]);
 
 study='default/';
-foldercontent=dir(['data/' study  ]);
+foldercontent=dir([conf.data.rootfolder filesep study  ]);
 
 for i=1:length(foldercontent)
     
@@ -22,10 +22,10 @@ for i=1:length(foldercontent)
     end
     
 end
-%loads new data
 
+%load new data
 for k=4:length( handles.data.name)%179%
-    current=load(['data/' upper(handles.data.name{k})],'meta','data','param');
+    current=load([conf.data.rootfolder filesep upper(handles.data.name{k})],'meta','data','param');
     
     
     %     fieldNames=fieldnames(current.data)
@@ -46,8 +46,7 @@ for k=4:length( handles.data.name)%179%
         
         fieldNames=fieldnames(current.(task{i}));
         for m=1:length(fieldNames)
-            
-            
+
             if isstruct(current.(task{i}).(fieldNames{m}))
                 fieldNames2=fieldnames(current.(task{i}).(fieldNames{m}));
                 for n=1:length(fieldNames2)
@@ -84,7 +83,6 @@ for k=4:length( handles.data.name)%179%
     end
     header{counter}='GlobalID';
     value{counter}=k;
-    
     header{counter+1}='picture';
     value{counter+1}=[upper(handles.data.name{k}) '.png'];
      header{counter+2}='realID';
@@ -105,6 +103,6 @@ for k=4:length( handles.data.name)%179%
     C1(k+1,:)=value;
     
 end
-C2=[ C1];
+C2=[C1];
 %    cell2csv(['metacsv/' handles.data.name{k} '.csv'],C2,';');
-cell2csv(['metacsv/allSimMeta.csv'],C2,'#');
+cell2csv([param.export.csvfolder filesep param.export.filename],C2,'#');

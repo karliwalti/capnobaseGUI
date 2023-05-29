@@ -56,6 +56,7 @@ function setEtCO2GUI_OpeningFcn(hObject, eventdata, handles, varargin)
 assignin('base', 'EtCO2GUI', hObject);
 checkAxes(hObject,1);
 handles.thisGUI=hObject;
+run configure.m
 
 current=1;
 switch length(varargin)
@@ -89,9 +90,9 @@ else
     handles.parameters.raterID=raterID; %varargin{1};
     
     set(handles.editID,'String',raterID);
-     set(handles.editDataset,'String',handles.parameters.dataset);
+    set(handles.editDataset,'String',handles.parameters.dataset);
     % handles.parameters.ratingFolder=['output'];
-    handles.parameters.ratingFolder=['data/' handles.parameters.dataset '/'];
+    handles.parameters.ratingFolder=[conf.data.rootfolder filesep handles.parameters.dataset filesep];
     if (~isdir(handles.parameters.ratingFolder))
         mkdir(handles.parameters.ratingFolder);
     end
@@ -358,21 +359,22 @@ function [handles]=LoadandDisplay(hObject, eventdata, handles)
 % clears labels/markers
 clearAllMarkers(hObject, eventdata, handles);
 
+run configure.m
 %loads new data
-%handles.current=load(['data/' handles.data.name{handles.data.current}],'meta','data','param');
+%handles.current=load([conf.data.rootfolder filesep handles.data.name{handles.data.current}],'meta','data','param');
 try
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_signal'],'data'); %load all data
+    load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_signal'],'data'); %load all data
 catch
     load(['data/default'],'data');
 end
 try
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_meta'],'meta');
+    load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_meta'],'meta');
 catch
     load(['data/default'],'meta');
 end
 try
     
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_param'],'param');
+    load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_param'],'param');
 catch
     
     load(['data/default'],'param');

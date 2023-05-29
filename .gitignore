@@ -1,0 +1,6 @@
+capnobaseGUI/configure.m
+
+*.asv
+capnobaseGUI/settings/*
+capnobaseGUI/old_data/
+capnobaseGUI/data/

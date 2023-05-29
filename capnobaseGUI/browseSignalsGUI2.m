@@ -53,6 +53,8 @@ function browseSignalsGUI2_OpeningFcn(hObject, eventdata, handles, varargin)
 
 % Choose default command line output for browseSignalsGUI2
 %handles.output = hObject;
+run configure.m
+
 path(path,'utils')
 assignin('base', 'RRGUI', hObject);
 current=1;
@@ -88,9 +90,8 @@ else
     
     %    set(handles.editID,'String',raterID);
     %    set(handles.editDataset,'String',handles.parameters.dataset);
-    %handles.parameters.ratingFolder=['output'];
-    % handles.parameters.ratingFolder=['data/'];
-    handles.parameters.ratingFolder=['data/' handles.parameters.dataset '/'];
+
+    handles.parameters.ratingFolder=[conf.data.rootfolder  filesep handles.parameters.dataset filesep];
     
     if (~isdir(handles.parameters.ratingFolder))
         mkdir(handles.parameters.ratingFolder);
@@ -352,64 +353,81 @@ end
 xlabel(['seconds'])
 
 function [handles]=LoadandDisplay(hObject, eventdata, handles)
+run configure.m
 
-
+default=0;
 % clears labels/cursors
 clearAllCursors(hObject, eventdata, handles);
 
 %loads new data
-%handles.current=load(['data/' handles.data.name{handles.data.current}],'meta','data','param');
-try
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_signal'],'data'); %load all data
-catch
-    load(['data/default'],'data');
-    data.flow.y=data.flow.y-2;
-end
-try
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_meta'],'meta');
-catch
-    load(['data/default'],'meta');
-end
-try
-    
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_param'],'param');
-catch
-    
-    load(['data/default'],'param');
-end
-try
-    
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_trend'],'trend');
-    trendparam=load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_trend'],'param');
-    
-catch
-    trend=struct([]);
-    load(['data/default'],'trend');
-    trendparam=load(['data/default'],'param');
-end
-try
-    
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_prediction'],'prediction');
-    predictionparam=load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_prediction'],'param');
-    
-catch
-    prediction=struct([]);
-    load(['data/default'],'prediction');
-    predictionparam=load(['data/default'],'param');
-end
 
-try
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_comment'],'comment');
-    set(handles.editComments,'String',comment)
-catch
-end
-% merge structures
-data=catstruct(data, trend, prediction);
-param.samplingrate=catstruct(trendparam.param.samplingrate,predictionparam.param.samplingrate,param.samplingrate); %param will be the most trusted valuefor duplicates
-if isfield(predictionparam.param, 'normalrange')
-    param.normalrange=predictionparam.param.normalrange; %param will be the most trusted valuefor duplicates
-end
+    try
+        load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_signal'],'data'); %load all data
+    catch
+        load(['data' filesep 'default'],'data');
+        data.flow.y=data.flow.y-2;
+        default=1;
+    end
+    try
+        load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_meta'],'meta');
+    catch
+        load(['data' filesep 'default'],'meta');
+    end
+    try
+        
+        load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_param'],'param');
+    catch
+        
+        load(['data' filesep 'default'],'param');
+    end
+    try
+        
+        load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_trend'],'trend');
+        trendparam=load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_trend'],'param');
+        
+    catch
+        trend=struct([]);
+        load(['data' filesep 'default'],'trend');
+        trendparam=load(['data' filesep 'default'],'param');
+    end
+    try
+        
+        load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_prediction'],'prediction');
+        predictionparam=load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_prediction'],'param');
+        
+    catch
+        prediction=struct([]);
+        load(['data' filesep 'default'],'prediction');
+        predictionparam=load(['data' filesep 'default'],'param');
+    end
+    
+    try
+        load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_comment'],'comment');
+        set(handles.editComments,'String',comment)
+    catch
+    end
+    % merge structures
+    data=catstruct(data, trend, prediction);
+    param.samplingrate=catstruct(trendparam.param.samplingrate,predictionparam.param.samplingrate,param.samplingrate); %param will be the most trusted valuefor duplicates
+    if isfield(predictionparam.param, 'normalrange')
+        param.normalrange=predictionparam.param.normalrange; %param will be the most trusted valuefor duplicates
+    end
+    
 
+
+%if a default is loaded, check whether alternative file format
+if default 
+    try
+    [conf.data.rootfolder filesep  handles.parameters.dataset filesep handles.data.name{handles.data.current}]
+    load([conf.data.rootfolder filesep  handles.parameters.dataset filesep handles.data.name{handles.data.current}],'meta','signal','param','labels');
+    data=signal;
+    
+   catch
+          disp('Warning: could not load single file format.')
+
+   end
+    
+end
 
 handles.current.data=data;
 handles.current.param=param;
@@ -417,7 +435,7 @@ handles.current.meta=meta;
 %handles.current.trend=trend;
 %handles.current.prediction=prediction;
 
-outputfile=[handles.parameters.ratingFolder '/' handles.data.name{handles.data.current} '_output.mat' ];
+outputfile=[handles.parameters.ratingFolder filesep handles.data.name{handles.data.current} '_output.mat' ];
 
 handles=discoverAvailableSignals(handles);
 %set(handles.signalTitleText,'String',handles.data.name{handles.data.current});
@@ -494,7 +512,7 @@ try
         output.startexp.x=round(GetAllCursorLocations('Exp').*handles.current.param.samplingrate.co2);
         output.endexpflow.x=round(GetAllCursorLocations('Eflow').*handles.current.param.samplingrate.co2);
         % output.rater=get(handles.editID,'String');
-        save([handles.parameters.ratingFolder '/' handles.data.name{handles.data.current} '_output'],'output');
+        save([handles.parameters.ratingFolder filesep handles.data.name{handles.data.current} '_output'],'output');
         disp('Success: Annotations saved.');
         %elseif get(handles.checkboxQRS,'Value') %QRS enabled
     elseif get(handles.radiobuttonQRS,'Value')
@@ -508,7 +526,7 @@ try
         handles.current.output.qrs.x=output.qrs.x;
         handles.current.output.artif.x=output.artif.x;
         % output.rater=get(handles.editID,'String');
-        save([handles.parameters.ratingFolder '/' handles.data.name{handles.data.current} '_output'],'output');
+        save([handles.parameters.ratingFolder filesep handles.data.name{handles.data.current} '_output'],'output');
         disp('Success: QRS Annotations saved.');
         %elseif get(handles.checkboxPleth,'Value') %Pleth enabled
     elseif get(handles.radiobuttonPleth,'Value')
@@ -525,7 +543,7 @@ try
         handles.current.output.plethartif.x=output.plethartif.x;
         handles.current.output.pleth_peak.x=output.pleth_peak.x;
         % output.rater=get(handles.editID,'String');
-        save([handles.parameters.ratingFolder '/' handles.data.name{handles.data.current} '_output'],'output');
+        save([handles.parameters.ratingFolder filesep handles.data.name{handles.data.current} '_output'],'output');
         disp('Success: Pleth Annotations saved.');
     else
         disp('Warning: No annotations saved because marker option not set.');
@@ -1101,7 +1119,7 @@ if value
     set(handles.popupmenuTopDisplay,'Enable','off');
     set(handles.popupmenuBottomDisplay,'Enable','off');
     set(handles.uipanelLabeltools,'Visible','on');
-    outputfile=[handles.parameters.ratingFolder '/' handles.data.name{handles.data.current} ];
+    outputfile=[handles.parameters.ratingFolder filesep handles.data.name{handles.data.current} ];
     if (exist(outputfile,'file')>0)
         tmp=load(outputfile);
         handles.current.output=tmp.output;
@@ -1271,11 +1289,13 @@ function popupmenuDataset_Callback(hObject, eventdata, handles)
 % end
 %     evalin('base',' var=whos(''-regexp'', ''GUI''); for i=1:length(var); if ishandle(eval(var(i).name))  ; delete(eval(var(i).name));  clear(var(i).name); end; end;');
 % end
+run configure.m
+
 contents = get(hObject,'String');
 handles.parameters.dataset=     contents{get(hObject,'Value')};
 disp(['Info: Dataset is now "' contents{get(hObject,'Value')} '".' ] );
 
-handles.parameters.ratingFolder=['data/' handles.parameters.dataset '/'];
+handles.parameters.ratingFolder=[conf.data.rootfolder filesep handles.parameters.dataset filesep];
 
 if (~isdir(handles.parameters.ratingFolder))
     mkdir(handles.parameters.ratingFolder);
@@ -1320,12 +1340,11 @@ fillpopupmenuDataset(hObject);
 
 function fillpopupmenuDataset(hObject)
 counter=1;
-dircontent=dir('data');
-a=3;
-if isunix
-    a=3;
-end
-for i=a:length(dircontent)
+run configure.m
+
+dircontent=dir(conf.data.rootfolder);
+dircontent = dircontent(~ismember({dircontent.name},{'.','..'}));
+for i=1:length(dircontent)
     if (dircontent(i).isdir)
         dataset{counter}=dircontent(i).name;
         counter=counter+1;
@@ -1344,7 +1363,7 @@ function editComments_Callback(hObject, eventdata, handles)
 %        str2double(get(hObject,'String')) returns contents of editComments as a double
 disp('comments callback')
 comment=get(hObject,'String');
-save(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_comment'],'comment');
+save([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_comment'],'comment');
 
 
 % --- Executes during object creation, after setting all properties.
@@ -1604,7 +1623,7 @@ if value
         set(handles.popupmenuTopDisplay,'Enable','off');
         set(handles.popupmenuBottomDisplay,'Enable','off');
         
-        outputfile=[handles.parameters.ratingFolder '/' handles.data.name{handles.data.current} '_output.mat'];
+        outputfile=[handles.parameters.ratingFolder filesep handles.data.name{handles.data.current} '_output.mat'];
         if (exist(outputfile,'file')>0)
             tmp=load(outputfile,'output');
             handles.current.output=tmp.output;
@@ -1667,7 +1686,7 @@ if value
         set(handles.popupmenuTopDisplay,'Enable','off');
         set(handles.popupmenuBottomDisplay,'Enable','off');
         set(handles.pushbuttonSave,'Enable','on');
-        outputfile=[handles.parameters.ratingFolder '/' handles.data.name{handles.data.current} '_output.mat'];
+        outputfile=[handles.parameters.ratingFolder filesep handles.data.name{handles.data.current} '_output.mat'];
         if (exist(outputfile,'file')>0)
             tmp=load(outputfile,'output');
             handles.current.output=tmp.output;
@@ -1715,7 +1734,7 @@ switch get(eventdata.NewValue,'Tag')   % Get Tag of selected object
         set(handles.uipanelLabels,'Visible','on');
         set(handles.pushbuttonSave,'Enable','on');
         set(handles.uipanelLabeltools,'Visible','on');
-        outputfile=[handles.parameters.ratingFolder '/' handles.data.name{handles.data.current}  '_output.mat' ];
+        outputfile=[handles.parameters.ratingFolder filesep handles.data.name{handles.data.current}  '_output.mat' ];
         if (exist(outputfile,'file')>0)
             tmp=load(outputfile);
             handles.current.output=tmp.output;
@@ -1729,7 +1748,7 @@ switch get(eventdata.NewValue,'Tag')   % Get Tag of selected object
     case 'radiobuttonQRS'
         if isfield(handles.current.param.samplingrate,'ecg')
             
-            outputfile=[handles.parameters.ratingFolder '/' handles.data.name{handles.data.current} '_output.mat'];
+            outputfile=[handles.parameters.ratingFolder filesep handles.data.name{handles.data.current} '_output.mat'];
             if (exist(outputfile,'file')>0)
                 tmp=load(outputfile,'output');
                 handles.current.output=tmp.output;
@@ -1746,7 +1765,7 @@ switch get(eventdata.NewValue,'Tag')   % Get Tag of selected object
             set(handles.uipanelPleth,'Visible','on');
             set(handles.pushbuttonSave,'Enable','on');
             set(handles.uipanelPlethShift,'Visible','on');
-            outputfile=[handles.parameters.ratingFolder '/' handles.data.name{handles.data.current} '_output.mat'];
+            outputfile=[handles.parameters.ratingFolder filesep handles.data.name{handles.data.current} '_output.mat'];
             if (exist(outputfile,'file')>0)
                 tmp=load(outputfile,'output');
                 handles.current.output=tmp.output;

@@ -1,15 +1,19 @@
 %Capnobase Signal Evaluation Tool
 
-%CapnoBase (c)2009-2010 Electrical and Computer Engineering in Medicine, UBC
+%CapnoBase (c)2009-2014 Electrical and Computer Engineering in Medicine, UBC
 %visit us at: http://ecem.ece.ubc.ca
+(c)2014-2022 Walter Karlen, karliwalti.ch
 
 %The CapnoBase Signal Evaluation Tool has been written and is currently maintained by Dr. Walter Karlen
-%Repot bugs or leave comments on http://www.capnobase.org or send an email to walter.karlen@gmail.com
-
+%Repot bugs or leave comments on http://www.capnobase.org or send an email to walter.karlen@ieee.org
 
 %ChangeLog file
 
-%V1.4.
+%V1.5
+06/6/22
+- revisions, renaming, easier configuration, fix subfolder compatibility. ready for open source.
+
+%V1.4.1
 13/5/10
 - minor edit. makes disappear controls during suggestion of cursors when operating with bid datasets.
 

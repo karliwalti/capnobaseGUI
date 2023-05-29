@@ -52,6 +52,8 @@ function setRRGUI_OpeningFcn(hObject, eventdata, handles, varargin)
 % varargin   command line arguments to setRRGUI (see VARARGIN)
 
 % Choose default command line output for setRRGUI
+run configure.m
+
 %handles.output = hObject;
 assignin('base', 'RRGUI', hObject);
 current=1;
@@ -92,8 +94,7 @@ else
     set(handles.editID,'String',raterID);
     set(handles.editDataset,'String',handles.parameters.dataset);
     %handles.parameters.ratingFolder=['output'];
-    % handles.parameters.ratingFolder=['data/'];
-    handles.parameters.ratingFolder=['data/' handles.parameters.dataset '/'];
+    handles.parameters.ratingFolder=[conf.data.rootfolder filesep handles.parameters.dataset filesep];
     
     if (~isdir(handles.parameters.ratingFolder))
         mkdir(handles.parameters.ratingFolder);
@@ -258,29 +259,30 @@ DeleteCursor(str2double(get(handles.editDCursorNumber,'String')));
 
 function [handles]=LoadandDisplay(hObject, eventdata, handles)
 
+run configure.m
 
 % clears labels/cursors
 clearAllCursors(hObject, eventdata, handles);
 
 %loads new data
-%handles.current=load(['data/' handles.data.name{handles.data.current}],'meta','data','param');
+%handles.current=load([conf.data.rootfolder filesep handles.data.name{handles.data.current}],'meta','data','param');
 try
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_signal'],'data'); %load all data
+    load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_signal'],'data'); %load all data
 catch
-    load(['data/default'],'data');
+    load(['data' filesep 'default'],'data');
     data.flow.y=data.flow.y-2;
 end
 try
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_meta'],'meta');
+    load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_meta'],'meta');
 catch
-    load(['data/default'],'meta');
+    load(['data' filesep 'default'],'meta');
 end
 try
     
-    load(['data/' handles.parameters.dataset '/' handles.data.name{handles.data.current} '_param'],'param');
+    load([conf.data.rootfolder filesep handles.parameters.dataset filesep handles.data.name{handles.data.current} '_param'],'param');
 catch
     
-    load(['data/default'],'param');
+    load(['data' filesep 'default'],'param');
 end
 handles.current.data=data;
 handles.current.param=param;

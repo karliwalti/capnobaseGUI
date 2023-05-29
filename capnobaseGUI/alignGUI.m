@@ -211,9 +211,11 @@ function [handles]=LoadandDisplay(hObject, eventdata, handles)
 % clears labels/cursors
 clearAllCursors(hObject, eventdata, handles);
 
+run configure.m
+
 %loads new data
-handles.current=load(['data/' handles.data.name{handles.data.current}],'meta','data','param');
-outputfile=[handles.parameters.ratingFolder '/' handles.data.name{handles.data.current} ];
+handles.current=load([conf.data.rootfolder filesep handles.data.name{handles.data.current}],'meta','data','param');
+outputfile=[handles.parameters.ratingFolder filesep handles.data.name{handles.data.current} ];
 
 %set(handles.signalTitleText,'String',handles.data.name{handles.data.current});
 set(handles.alignGUI,'Name',handles.data.name{handles.data.current});
@@ -227,7 +229,7 @@ ylabel(['pCO2 [' handles.current.meta.sensor.co2.units ']'],'Rotation',90)
 xlabel(['samples'])
 
 shift=0;
-shiftfile=['data/shift' handles.data.name{handles.data.current} ];
+shiftfile=[conf.data.rootfolder filesep 'shift' handles.data.name{handles.data.current} ];
 if (exist(shiftfile,'file')>0)
     tmp=load(shiftfile,'shift');
     handles.current.shift=tmp.shift;

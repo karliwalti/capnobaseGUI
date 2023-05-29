@@ -95,7 +95,7 @@ try
                     handles.current.rating.quality.(field).range=[minPos maxPos];
                 else
                     handles.current.rating.quality.(field).present=1+handles.current.rating.quality.(field).present;
-                    handles.current.rating.quality.(field).range=[ handles.current.rating.quality.(field).range;minPos maxPos];
+                    handles.current.rating.quality.(field).range=[handles.current.rating.quality.(field).range;minPos maxPos];
                     
                 end
             else
